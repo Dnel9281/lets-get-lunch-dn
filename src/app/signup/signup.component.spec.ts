@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth/auth.service';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { of, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 class SignupPage {
   submitBtn: DebugElement;
@@ -26,6 +27,10 @@ class SignupPage {
                            .queryAll(By.css('[name=preference]'));
   }
 }
+
+class MockRouter {
+  navigate(path) {}
+}
   
 class MockAuthService {
   signup(credentials) {}
@@ -33,8 +38,9 @@ class MockAuthService {
 
 let component: SignupComponent;
 let fixture: ComponentFixture<SignupComponent>;
-let signupPage: SignupPage; // Add this
-let authService: AuthService; // Add this
+let signupPage: SignupPage;
+let authService: AuthService;
+let router: Router;
 
 describe('SignupComponent', () => {
   beforeEach(async(() => {
@@ -44,7 +50,8 @@ describe('SignupComponent', () => {
     .overrideComponent(SignupComponent, {
       set: {
         providers: [
-          { provide: AuthService, useClass: MockAuthService }
+          { provide: AuthService, useClass: MockAuthService },
+          { provide: Router, useClass: MockRouter }
         ]
       }
     }).compileComponents();
@@ -56,6 +63,7 @@ describe('SignupComponent', () => {
 
     signupPage = new SignupPage();
     authService = fixture.debugElement.injector.get(AuthService);
+    router = fixture.debugElement.injector.get(Router);
     fixture.detectChanges();
     return fixture.whenStable().then(() => {
       fixture.detectChanges();
@@ -77,13 +85,14 @@ describe('SignupComponent', () => {
     spyOn(authService, 'signup').and.callFake(() => {
       return of({ token: 's3cr3tt0ken' });
     });
+    spyOn(router, 'navigate');
     signupPage.submitBtn.nativeElement.click();
     expect(authService.signup).toHaveBeenCalledWith({
       username: 'johndoe',
       password: 'password',
       dietPreferences: ['BBQ', 'Burger']
     });
-    // Add expectation to redirect to user dashboard
+    expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
   });
 
   it('should display an error message with invalid credentials', () => {
