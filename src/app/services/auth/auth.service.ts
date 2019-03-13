@@ -41,4 +41,8 @@ export class AuthService {
     localStorage.removeItem('Authorization');
     this.loggedIn.emit(false);
   }
+
+  currentUser() {
+    return this.jwtHelper.decodeToken(localStorage.getItem('Authorization'));
+  }
 }
