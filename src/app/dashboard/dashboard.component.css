@@ -1,0 +1,9 @@
+.calendar {
+  margin-top: 25px;
+  width: 100%; /* added this */
+}
+
+/* added this */
+.calendar-view {
+  margin: 10px;
+}
