@@ -8,6 +8,7 @@ import { DashboardModule } from './dashboard.module';
 import { AuthService } from '../services/auth/auth.service';
 import { EventsService } from '../services/events/events.service';
 import { Event } from '../services/events/event';
+import { Router } from '@angular/router';
 
 
 import { DebugElement } from '@angular/core';
@@ -33,6 +34,10 @@ const events: Array<Event> = [{
   ]
 }];
 
+class MockRouter {
+  navigate(path) {}
+}
+
 class MockAuthService {
   currentUser = jasmine.createSpy('currentUser').and.callFake(() => currentUser);
 }
@@ -47,6 +52,8 @@ describe('DashboardComponent', () => {
   let eventsService: EventsService;
   let viewDateElement: DebugElement[];
   let calendarEventElement: DebugElement[];
+  let eventLink: DebugElement[];
+  let router: Router;
 
 
   beforeEach(async(() => {
@@ -62,7 +69,8 @@ describe('DashboardComponent', () => {
       set: {
         providers: [
           { provide: AuthService, useClass: MockAuthService },
-          { provide: EventsService, useClass: MockEventsService }
+          { provide: EventsService, useClass: MockEventsService },
+          { provide: Router, useClass: MockRouter }
         ]
       }
     }).compileComponents();
@@ -73,14 +81,15 @@ describe('DashboardComponent', () => {
     component = fixture.componentInstance;
     authService = fixture.debugElement.injector.get(AuthService);
     eventsService = fixture.debugElement.injector.get(EventsService);
+    router = fixture.debugElement.injector.get(Router);
     spyOn(component, 'addJSDate').and.callThrough();
     spyOn(component, 'addEventColors').and.callThrough();
     fixture.detectChanges();
     return fixture.whenStable().then(() => {
       fixture.detectChanges();
-      viewDateElement = fixture.debugElement
-                               .queryAll(By.css('.toggle-view .btn-primary'));
+      viewDateElement = fixture.debugElement.queryAll(By.css('.toggle-view .btn-primary'));
       calendarEventElement = fixture.debugElement.queryAll(By.css('.cal-event'));
+      eventLink = fixture.debugElement.queryAll(By.css('.cal-event-title'));
     });
   }));
 
@@ -108,6 +117,13 @@ describe('DashboardComponent', () => {
       .toContain('My first event');
   });
 
+  it('should navigate to the event view when an event is clicked', () => {
+    spyOn(router, 'navigate');
+    eventLink[0].nativeElement.click();
+    expect(router.navigate)
+      .toHaveBeenCalledWith(['/event/' + '5a55135639fbc4ca3ee0ce5a']);
+  });
+  
   describe('addJSDate', () => {
     it('should add a "start" and "end" property to an event', () => {
       const result = component.addJSDate(events);
