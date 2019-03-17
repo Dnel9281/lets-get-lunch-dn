@@ -30,6 +30,13 @@ describe('Navbar', () => {
       cy.signup();
     });
     
+    it('should show a link to see all events', () => {
+      cy
+        .get('[data-test=events]')
+          .should('have.text', 'Events').click()
+          .url().should('include', '/events');
+    });
+    
     it('should show a link to logout', () => {
       cy
         .get('[data-test=logout]')
