@@ -68,6 +68,16 @@ describe('NavbarComponent', () => {
       expect(authService.logout).toHaveBeenCalled();
       expect(router.navigate).toHaveBeenCalledWith(['/']);
     });
+
+    it('should have a link to view all events', () => {
+      const link = fixture.debugElement.query(By.css('[data-test=events]'));
+      expect(link.attributes.routerLink).toEqual('/events');
+    });
+    
+    it('should have a link to logout visible', () => {
+      const link = fixture.debugElement.query(By.css('[data-test=logout]'));
+      expect(link.nativeElement.innerText).toEqual('Logout');
+    });
   });
 
   describe('with a user who is not logged in', () => {
@@ -94,16 +104,6 @@ describe('NavbarComponent', () => {
     it('should have a link to login visible', () => {
       const link = fixture.debugElement.query(By.css('[data-test=login]'));
       expect(link.attributes.routerLink).toEqual('/login');
-    });
-
-    it('should have a link to view all events', () => {
-      const link = fixture.debugElement.query(By.css('[data-test=events]'));
-      expect(link.attributes.routerLink).toEqual('/events');
-    });
-    
-    it('should have a link to logout visible', () => {
-      const link = fixture.debugElement.query(By.css('[data-test=logout]'));
-      expect(link.nativeElement.innerText).toEqual('Logout');
     });
   });
 
