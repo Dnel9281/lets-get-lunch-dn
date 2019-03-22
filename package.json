@@ -1,16 +1,24 @@
 {
   "name": "lets-get-lunch",
   "version": "0.0.0",
+  "engines": {
+    "node": "8.9.0",
+    "npm": "4.1.2"
+  },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "ng build --aot --prod"
   },
   "private": true,
   "dependencies": {
+    "@angular/cli": "~7.0.4",
+    "@angular/compiler-cli": "~7.0.0",
+    "typescript": "~3.1.1",
     "@agm/core": "^1.0.0-beta.5",
     "@angular/animations": "~7.0.0",
     "@angular/cdk": "^6.4.3",
@@ -26,6 +34,7 @@
     "angular-calendar": "^0.26.6",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.4",
+    "express": "^4.16.4",
     "jquery": "^3.3.1",
     "ng-pick-datetime": "^6.0.15",
     "rxjs": "~6.3.3",
