@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarModule } from 'angular-calendar';
 
 @NgModule({
   declarations: [DashboardComponent],
   imports: [
     CommonModule,
     DashboardRoutingModule,
-    CalendarModule.forRoot({provide: DateAdapter,  useFactory: adapterFactory})
+    CalendarModule.forRoot()
   ]
 })
 export class DashboardModule { }
